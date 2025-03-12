@@ -24,21 +24,44 @@ import javax.inject.Inject
 @HiltViewModel
 class EmployeeListViewModel @Inject constructor(private val repository: EmployeeListRepository) :
     ViewModel() {
-    private val _employees = MutableStateFlow(emptyList<Employee>())
-    val employees: StateFlow<List<Employee>> = _employees
 
-    private val _employeesError = MutableStateFlow(Throwable())
-    val employeesError: StateFlow<Throwable> = _employeesError
+    // Backing property to avoid state updates from other classes
+    private val _uiState =
+        MutableStateFlow<EmployeesListUiState>(EmployeesListUiState.Success(emptyList()))
+
+    // The UI collects from this StateFlow to get its state updates
+    val uiState: StateFlow<EmployeesListUiState> = _uiState
 
     fun getEmployees() {
+        //TODO: Add any custom analytics here
+        fetchEmployees()
+    }
+
+    fun refreshEmployees() {
+        //TODO: Add any custom analytics here
+        // TODO: Debug, the new stateflow launched here does not trigger the observer.
+        fetchEmployees()
+    }
+
+    //TODO: Decide if this should be made public in order to unit test it.
+    private fun fetchEmployees() {
         viewModelScope.launch {
             repository.getEmployees()
                 .onSuccess { data ->
-                    _employees.value = data.employees.map { it.toEmployee() }
+                    _uiState.value =
+                        EmployeesListUiState.Success(data.employees.map { it.toEmployee() })
                 }
                 .onFailure { error ->
-                    _employeesError.value = error
+                    _uiState.value = EmployeesListUiState.Error(error)
                 }
         }
     }
+
+    // TODO: Evaluate if this should be moved to a separate file
+    /** Represents different states for the EmployeesList screen **/
+    sealed class EmployeesListUiState {
+        data class Success(val employees: List<Employee>) : EmployeesListUiState()
+        data class Error(val exception: Throwable) : EmployeesListUiState()
+    }
+
 }

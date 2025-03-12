@@ -9,11 +9,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.egarcia.blockemployeedirectory.databinding.FragmentEmployeeListBinding
 import com.egarcia.employee.directory.presentation.viewModels.EmployeeListViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 /**
@@ -62,30 +63,50 @@ class EmployeeListFragment : Fragment() {
 
     private fun setUp() {
         with(binding) {
-            recycler.adapter = adapter
+            rvEmployeeList.adapter = adapter
+
+            //TODO: Move to setObservers?
+            srlEmployeeList.setOnRefreshListener {
+                viewModel.refreshEmployees()
+            }
         }
     }
 
     private fun setObservers() {
         lifecycleScope.launch {
-            viewModel.employees.collectLatest {
-                adapter.submitList(it)
-            }
-            viewModel.employeesError.collectLatest {
-                Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect() {
+                    when (it) {
+                        is EmployeeListViewModel.EmployeesListUiState.Success -> {
+                            adapter.submitList(it.employees)
+                            binding.srlEmployeeList.isRefreshing = false
+                        }
+
+                        is EmployeeListViewModel.EmployeesListUiState.Error -> {
+                            Toast.makeText(
+                                requireContext(), it.exception.message, Toast.LENGTH_LONG
+                            ).show()
+                            binding.srlEmployeeList.isRefreshing = false
+                        }
+                    }
+                }
             }
         }
     }
 
+    /**
+     * Edge to edge required configuration to prevent overlapping with the status bar.
+     * Required for API 35 and up.
+     */
     private fun handleInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
 
             // Apply padding to the top of the RecyclerView to avoid the status bar
-            binding.recycler.setPadding(
-                binding.recycler.paddingLeft,
+            binding.rvEmployeeList.setPadding(
+                binding.rvEmployeeList.paddingLeft,
                 insets.top,
-                binding.recycler.paddingRight,
+                binding.rvEmployeeList.paddingRight,
                 insets.bottom
             )
 
