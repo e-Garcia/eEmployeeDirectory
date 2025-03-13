@@ -29,11 +29,8 @@ class EmployeeListViewModel @Inject constructor(private val repository: Employee
 
     private var responseBehavior = ResponseBehavior.EMPLOYEES
 
-    // Backing property to avoid state updates from other classes
     private val _uiState =
         MutableStateFlow<EmployeesListUiState>(EmployeesListUiState.Success(emptyList()))
-
-    // The UI collects from this StateFlow to get its state updates
     val uiState: StateFlow<EmployeesListUiState> = _uiState
 
     fun swapResponse() {
