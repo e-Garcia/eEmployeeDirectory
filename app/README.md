@@ -14,6 +14,8 @@ https://medium.com/@ajayjg/ids-layouts-resource-file-naming-android-naming-conve
 **Out of Scope**
 Tablet support
 Edge to edge support
+Json response mandatory fields validations
+Dark Mode
 
 **Libraries**
 ## Core Android & UI:
@@ -35,7 +37,7 @@ Retrofit
 Gson Converter
 
 ## Image Loading:
-Picasso
+Glide
 
 ## Dependency Injection:
 Hilt

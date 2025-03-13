@@ -5,6 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.egarcia.employee.R
 import com.egarcia.employee.databinding.ItemEmployeeBinding
 import com.egarcia.employee.directory.domain.models.Employee
 import com.egarcia.employee.directory.presentation.util.EmployeeDiffCallback
@@ -31,7 +33,10 @@ class EmployeesAdapter : ListAdapter<Employee, EmployeesAdapter.EmployeeViewHold
                 tvDirectoryName.text = employee.fullName
                 tvDirectoryTeam.text = employee.team
                 Glide.with(binding.root)
-                    .load(employee.photoUrlSmall)  // Image URL
+                    .load(employee.photoUrlSmall)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .fallback(R.drawable.ic_fallback)
+                    .error(R.drawable.ic_error)
                     .into(ivDirectoryPhoto)
             }
         }
