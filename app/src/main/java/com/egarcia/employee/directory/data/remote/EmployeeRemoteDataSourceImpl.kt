@@ -2,11 +2,17 @@ package com.egarcia.employee.directory.data.remote
 
 import com.egarcia.employee.directory.data.remote.api.EmployeeApiService
 import com.egarcia.employee.directory.data.remote.models.EmployeeListResponse
+import com.egarcia.employee.directory.data.remote.models.isValid
 
 class EmployeeRemoteDataSourceImpl(private val apiService: EmployeeApiService) : EmployeeRemoteDataSource {
     override suspend fun getEmployees(): Result<EmployeeListResponse> {
         return try {
-            Result.success(apiService.getEmployees())
+            val response = apiService.getEmployees()
+            if (response.isValid()) {
+                Result.success(response)
+            } else {
+                Result.failure(Exception("Invalid response"))
+            }
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -14,7 +20,12 @@ class EmployeeRemoteDataSourceImpl(private val apiService: EmployeeApiService) :
 
     override suspend fun getEmployeesMalformed(): Result<EmployeeListResponse> {
         return try {
-            Result.success(apiService.getEmployeesMalformed())
+            val response = apiService.getEmployeesMalformed()
+            if (response.isValid()) {
+                Result.success(response)
+            } else {
+                Result.failure(Exception("Invalid response"))
+            }
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -22,7 +33,12 @@ class EmployeeRemoteDataSourceImpl(private val apiService: EmployeeApiService) :
 
     override suspend fun getEmployeesEmpty(): Result<EmployeeListResponse> {
         return try {
-            Result.success(apiService.getEmployeesEmpty())
+            val response = apiService.getEmployeesEmpty()
+            if (response.isValid()) {
+                Result.success(response)
+            } else {
+                Result.failure(Exception("Invalid response"))
+            }
         } catch (e: Exception) {
             Result.failure(e)
         }
