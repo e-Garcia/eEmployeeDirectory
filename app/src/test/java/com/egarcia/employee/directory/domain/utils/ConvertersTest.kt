@@ -8,7 +8,7 @@ import org.junit.Test
 class EmployeeResponseToEmployeeTest {
 
     @Test
-    fun `toEmployee, when valid employee, response returns employee`() = runTest {
+    fun `toEmployee, when employeeResponse is valid, its response returns an employee`() = runTest {
         // Given
         val employeeResponse = EmployeeResponse(
             uuid = "123",
@@ -34,7 +34,7 @@ class EmployeeResponseToEmployeeTest {
     }
 
     @Test
-    fun `toEmployee, when empty fields, returns employee with empty fields`() = runTest {
+    fun `toEmployee, when fields are empty, it returns an employee with empty fields`() = runTest {
         // Given
         val employeeResponse = EmployeeResponse(
             uuid = "",
@@ -60,7 +60,7 @@ class EmployeeResponseToEmployeeTest {
     }
 
     @Test
-    fun `toEmployee, when null fields, returns employee with null fields`() = runTest {
+    fun `toEmployee, when fields are null, it returns an employee with null fields`() = runTest {
         // Given
         val employeeResponse = EmployeeResponse(
             uuid = null,

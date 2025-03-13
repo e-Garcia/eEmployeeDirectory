@@ -38,7 +38,7 @@ class EmployeeListViewModelTest {
     }
 
     @Test
-    fun `fetchEmployees, when successful, returns success state`() = runTest{
+    fun `fetchEmployees, when successful, it returns success state`() = runTest{
         // Given
         val employeesResponse = EmployeeListResponse(createEmployeeResponseList())
         val expectedEmployees = createEmployeeList()
@@ -56,7 +56,7 @@ class EmployeeListViewModelTest {
     }
 
     @Test
-    fun `fetchEmployees, when unsuccessful, returns error state`() = runTest {
+    fun `fetchEmployees, when unsuccessful, it returns error state`() = runTest {
         // Given
         val error = UnknownHostException("No internet")
         coEvery { repository.getEmployees() } returns Result.failure(error)
@@ -70,7 +70,7 @@ class EmployeeListViewModelTest {
     }
 
     @Test
-    fun `fetchEmployees, when loading, returns loading state`() = runTest {
+    fun `fetchEmployees, when loading, it returns loading state`() = runTest {
         // Given
         coEvery { repository.getEmployees() } just Awaits
 
