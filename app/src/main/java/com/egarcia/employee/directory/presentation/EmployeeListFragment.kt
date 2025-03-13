@@ -89,6 +89,7 @@ class EmployeeListFragment : Fragment() {
                         }
 
                         is EmployeeListViewModel.EmployeesListUiState.Error -> {
+                            showEmptyState()
                             Toast.makeText(
                                 requireContext(), it.exception.message, Toast.LENGTH_LONG
                             ).show()
