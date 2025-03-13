@@ -1,4 +1,4 @@
-package com.egarcia.blockemployeedirectory
+package com.egarcia.employee
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

@@ -1,4 +1,4 @@
-package com.egarcia.employee.directory.presentation.viewModels
+package com.egarcia.employee.directory.presentation.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -32,20 +32,9 @@ class EmployeeListViewModel @Inject constructor(private val repository: Employee
     // The UI collects from this StateFlow to get its state updates
     val uiState: StateFlow<EmployeesListUiState> = _uiState
 
-    fun getEmployees() {
-        //TODO: Add any custom analytics here
-        fetchEmployees()
-    }
-
-    fun refreshEmployees() {
-        //TODO: Add any custom analytics here
-        // TODO: Debug, the new stateflow launched here does not trigger the observer.
-        fetchEmployees()
-    }
-
-    //TODO: Decide if this should be made public in order to unit test it.
-    private fun fetchEmployees() {
+    fun fetchEmployees() {
         viewModelScope.launch {
+            _uiState.value = EmployeesListUiState.Loading
             repository.getEmployees()
                 .onSuccess { data ->
                     _uiState.value =
@@ -57,11 +46,11 @@ class EmployeeListViewModel @Inject constructor(private val repository: Employee
         }
     }
 
-    // TODO: Evaluate if this should be moved to a separate file
     /** Represents different states for the EmployeesList screen **/
     sealed class EmployeesListUiState {
         data class Success(val employees: List<Employee>) : EmployeesListUiState()
         data class Error(val exception: Throwable) : EmployeesListUiState()
+        data object Loading : EmployeesListUiState()
     }
 
 }

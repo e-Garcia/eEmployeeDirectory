@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.egarcia.blockemployeedirectory.databinding.ItemEmployeeBinding
+import com.egarcia.employee.databinding.ItemEmployeeBinding
 import com.egarcia.employee.directory.domain.models.Employee
 import com.egarcia.employee.directory.presentation.util.EmployeeDiffCallback
 

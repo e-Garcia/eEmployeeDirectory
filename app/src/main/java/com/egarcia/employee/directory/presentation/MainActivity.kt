@@ -5,7 +5,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import com.egarcia.blockemployeedirectory.R
+import com.egarcia.employee.R
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

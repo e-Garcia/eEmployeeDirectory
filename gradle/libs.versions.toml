@@ -1,6 +1,8 @@
 [versions]
 agp = "8.7.3"
-retrofit = "2.9.0"
+kotlinxCoroutinesTest = "1.8.0"
+mockk = "1.13.8"
+retrofit = "2.10.0"
 fragmentKtx = "1.8.6"
 glide = "4.15.1"
 kotlin = "1.9.24"
@@ -13,7 +15,7 @@ lifecycleViewmodelKtx = "2.8.7"
 material = "1.12.0"
 activity = "1.10.1"
 constraintlayout = "2.2.1"
-navigationFragmentKtx = "2.8.8"
+navigationFragmentKtx = "2.8.9"
 hilt = "2.51.1"
 swiperefreshlayout = "1.1.0"
 
@@ -30,6 +32,7 @@ androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx",
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 glide-compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
@@ -38,6 +41,7 @@ retrofit-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref 
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

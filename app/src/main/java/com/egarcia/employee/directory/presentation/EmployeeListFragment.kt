@@ -12,8 +12,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.egarcia.blockemployeedirectory.databinding.FragmentEmployeeListBinding
-import com.egarcia.employee.directory.presentation.viewModels.EmployeeListViewModel
+import com.egarcia.employee.databinding.FragmentEmployeeListBinding
+import com.egarcia.employee.directory.presentation.viewmodels.EmployeeListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -31,43 +31,36 @@ import kotlinx.coroutines.launch
  **/
 @AndroidEntryPoint
 class EmployeeListFragment : Fragment() {
-    private var _binding: FragmentEmployeeListBinding? = null
-    private val binding get() = _binding!!
-
+    private lateinit var binding: FragmentEmployeeListBinding
+    private lateinit var adapter: EmployeesAdapter
     private val viewModel: EmployeeListViewModel by viewModels()
-    private val adapter = EmployeesAdapter()
 
     //region Lifecycle Methods
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentEmployeeListBinding.inflate(inflater, container, false)
+        binding = FragmentEmployeeListBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getEmployees()
-
-        setUp()
+        adapter = EmployeesAdapter()
+        viewModel.fetchEmployees()
+        setUpBindings()
         setObservers()
         handleInsets()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
     //endregion
 
-    private fun setUp() {
+    private fun setUpBindings() {
         with(binding) {
             rvEmployeeList.adapter = adapter
 
-            //TODO: Move to setObservers?
             srlEmployeeList.setOnRefreshListener {
-                viewModel.refreshEmployees()
+                viewModel.fetchEmployees()
             }
         }
     }
@@ -75,8 +68,12 @@ class EmployeeListFragment : Fragment() {
     private fun setObservers() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect() {
+                viewModel.uiState.collect {
                     when (it) {
+                        is EmployeeListViewModel.EmployeesListUiState.Loading -> {
+                            // Do nothing
+                        }
+
                         is EmployeeListViewModel.EmployeesListUiState.Success -> {
                             adapter.submitList(it.employees)
                             binding.srlEmployeeList.isRefreshing = false
