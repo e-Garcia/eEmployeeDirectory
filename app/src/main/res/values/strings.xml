@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Block Employee Directory</string>
     <string name="profile_picture_content_description">Profile picture</string>
+    <string name="txt_empty_list">No employees found</string>
 </resources>

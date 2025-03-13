@@ -75,7 +75,12 @@ class EmployeeListFragment : Fragment() {
                         }
 
                         is EmployeeListViewModel.EmployeesListUiState.Success -> {
-                            adapter.submitList(it.employees)
+                            if (it.employees.isEmpty()) {
+                                showEmptyState()
+                            } else {
+                                hideEmptyState()
+                                adapter.submitList(it.employees)
+                            }
                             binding.srlEmployeeList.isRefreshing = false
                         }
 
@@ -110,6 +115,16 @@ class EmployeeListFragment : Fragment() {
             // Return the insets, so they are dispatched to the children
             WindowInsetsCompat.CONSUMED
         }
+    }
+
+    private fun showEmptyState() {
+        binding.rvEmployeeList.visibility = View.GONE
+        binding.emptyStateView.visibility = View.VISIBLE
+    }
+
+    private fun hideEmptyState() {
+        binding.rvEmployeeList.visibility = View.VISIBLE
+        binding.emptyStateView.visibility = View.GONE
     }
 
 }
