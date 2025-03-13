@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
@@ -12,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.egarcia.employee.R
 import com.egarcia.employee.databinding.FragmentEmployeeListBinding
 import com.egarcia.employee.directory.presentation.viewmodels.EmployeeListViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -89,10 +89,7 @@ class EmployeeListFragment : Fragment() {
                         }
 
                         is EmployeeListViewModel.EmployeesListUiState.Error -> {
-                            showEmptyState()
-                            Toast.makeText(
-                                requireContext(), it.exception.message, Toast.LENGTH_LONG
-                            ).show()
+                            showErrorState(it)
                             binding.srlEmployeeList.isRefreshing = false
                         }
                     }
@@ -122,14 +119,22 @@ class EmployeeListFragment : Fragment() {
         }
     }
 
-    private fun showEmptyState() {
+    private fun showErrorState(uiErrorState: EmployeeListViewModel.EmployeesListUiState.Error) {
+        val errorDescription = getString(R.string.txt_error_employee_list, uiErrorState.exception.message)
+        binding.tvEmptyStateDescription.text = errorDescription
         binding.rvEmployeeList.visibility = View.GONE
-        binding.emptyStateView.visibility = View.VISIBLE
+        binding.tvEmptyStateDescription.visibility = View.VISIBLE
+    }
+
+    private fun showEmptyState() {
+        binding.tvEmptyStateDescription.text = getString(R.string.txt_empty_employee_list)
+        binding.rvEmployeeList.visibility = View.GONE
+        binding.tvEmptyStateDescription.visibility = View.VISIBLE
     }
 
     private fun hideEmptyState() {
         binding.rvEmployeeList.visibility = View.VISIBLE
-        binding.emptyStateView.visibility = View.GONE
+        binding.tvEmptyStateDescription.visibility = View.GONE
     }
 
 }

@@ -11,7 +11,7 @@ class EmployeeRemoteDataSourceImpl(private val apiService: EmployeeApiService) :
             if (response.isValid()) {
                 Result.success(response)
             } else {
-                Result.failure(Exception("Invalid response"))
+                Result.failure(Exception(INVALID_RESPONSE_DESCRIPTION))
             }
         } catch (e: Exception) {
             Result.failure(e)
@@ -24,7 +24,7 @@ class EmployeeRemoteDataSourceImpl(private val apiService: EmployeeApiService) :
             if (response.isValid()) {
                 Result.success(response)
             } else {
-                Result.failure(Exception("Invalid response"))
+                Result.failure(Exception(INVALID_RESPONSE_DESCRIPTION))
             }
         } catch (e: Exception) {
             Result.failure(e)
@@ -37,7 +37,7 @@ class EmployeeRemoteDataSourceImpl(private val apiService: EmployeeApiService) :
             if (response.isValid()) {
                 Result.success(response)
             } else {
-                Result.failure(Exception("Invalid response"))
+                Result.failure(Exception(INVALID_RESPONSE_DESCRIPTION))
             }
         } catch (e: Exception) {
             Result.failure(e)
