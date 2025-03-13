@@ -59,6 +59,10 @@ class EmployeeListFragment : Fragment() {
         with(binding) {
             rvEmployeeList.adapter = adapter
 
+            fabChangeUrl.setOnClickListener {
+                viewModel.swapResponse()
+            }
+
             srlEmployeeList.setOnRefreshListener {
                 viewModel.fetchEmployees()
             }

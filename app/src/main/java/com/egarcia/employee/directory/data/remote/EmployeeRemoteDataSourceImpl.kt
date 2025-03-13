@@ -11,4 +11,20 @@ class EmployeeRemoteDataSourceImpl(private val apiService: EmployeeApiService) :
             Result.failure(e)
         }
     }
+
+    override suspend fun getEmployeesMalformed(): Result<EmployeeListResponse> {
+        return try {
+            Result.success(apiService.getEmployeesMalformed())
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getEmployeesEmpty(): Result<EmployeeListResponse> {
+        return try {
+            Result.success(apiService.getEmployeesEmpty())
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

@@ -3,12 +3,14 @@ package com.egarcia.employee.directory.presentation.viewmodels
 import com.egarcia.employee.directory.data.remote.models.EmployeeListResponse
 import com.egarcia.employee.directory.data.remote.models.EmployeeResponse
 import com.egarcia.employee.directory.data.repository.EmployeeListRepository
+import com.egarcia.employee.directory.data.repository.ResponseBehavior
 import com.egarcia.employee.directory.domain.models.Employee
 import com.egarcia.employee.directory.rules.MainDispatcherRule
 import io.mockk.Awaits
 import io.mockk.coEvery
 import io.mockk.just
 import io.mockk.mockk
+import io.mockk.slot
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -38,11 +40,13 @@ class EmployeeListViewModelTest {
     }
 
     @Test
-    fun `fetchEmployees, when successful, it returns success state`() = runTest{
+    fun `fetchEmployees, when successful, it returns success state`() = runTest {
         // Given
         val employeesResponse = EmployeeListResponse(createEmployeeResponseList())
         val expectedEmployees = createEmployeeList()
-        coEvery { repository.getEmployees() } returns Result.success(employeesResponse)
+        coEvery { repository.getEmployees(ResponseBehavior.EMPLOYEES) } returns Result.success(
+            employeesResponse
+        )
 
         // When
         viewModel.fetchEmployees()
@@ -59,7 +63,7 @@ class EmployeeListViewModelTest {
     fun `fetchEmployees, when unsuccessful, it returns error state`() = runTest {
         // Given
         val error = UnknownHostException("No internet")
-        coEvery { repository.getEmployees() } returns Result.failure(error)
+        coEvery { repository.getEmployees(ResponseBehavior.EMPLOYEES) } returns Result.failure(error)
 
         // When
         viewModel.fetchEmployees()
@@ -72,7 +76,7 @@ class EmployeeListViewModelTest {
     @Test
     fun `fetchEmployees, when loading, it returns loading state`() = runTest {
         // Given
-        coEvery { repository.getEmployees() } just Awaits
+        coEvery { repository.getEmployees(any()) } just Awaits
 
         // When
         viewModel.fetchEmployees()
@@ -81,6 +85,48 @@ class EmployeeListViewModelTest {
         val actualState = viewModel.uiState.first()
         assertEquals(EmployeeListViewModel.EmployeesListUiState.Loading, actualState)
     }
+
+    @Test
+    fun `fetchEmployees, when successful but empty, it returns success with an empty list state`() =
+        runTest {
+            // Given
+            val employeesResponse = EmployeeListResponse(arrayListOf())
+            val expectedEmployees = arrayListOf<Employee>()
+            coEvery { repository.getEmployees(ResponseBehavior.EMPLOYEES_EMPTY) } returns Result.success(
+                employeesResponse
+            )
+
+            // When
+            viewModel.fetchEmployees(ResponseBehavior.EMPLOYEES_EMPTY)
+
+            // Then
+            val actualState = viewModel.uiState.first()
+            assertEquals(
+                EmployeeListViewModel.EmployeesListUiState.Success(expectedEmployees),
+                actualState
+            )
+        }
+
+    @Test
+    fun `swapResponse, when successful but empty, it returns success with an empty list state`() =
+        runTest {
+            // Given
+            val newViewModel = EmployeeListViewModel(repository)
+            val responseBehaviorSlot = slot<ResponseBehavior>()
+            coEvery { repository.getEmployees(capture(responseBehaviorSlot)) } returns Result.success(
+                EmployeeListResponse(arrayListOf())
+            )
+            // When
+            newViewModel.swapResponse()
+
+            // Then
+            val actualState = responseBehaviorSlot.captured
+            assertEquals(
+                ResponseBehavior.EMPLOYEES_MALFORMED,
+                actualState
+            )
+        }
+
 
     // Helper method to create test data
     private fun createEmployeeResponseList(): ArrayList<EmployeeResponse> {
@@ -117,13 +163,15 @@ class EmployeeListViewModelTest {
                 fullName = "John Doe",
                 photoUrlSmall = "url1",
                 photoUrlLarge = "url2",
-                team = "Team 1"),
+                team = "Team 1"
+            ),
             Employee(
                 uuid = "2",
                 fullName = "Jane Smith",
                 photoUrlSmall = "url3",
                 photoUrlLarge = "url4",
-                team = "Team 2")
+                team = "Team 2"
+            )
         )
     }
 }
