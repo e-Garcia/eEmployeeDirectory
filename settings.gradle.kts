@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "BlockEmployeeDirectory"
+rootProject.name = "eEmployeeDirectory"
 include(":app")
  

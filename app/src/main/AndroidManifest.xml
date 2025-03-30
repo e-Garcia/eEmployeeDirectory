@@ -12,8 +12,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:name="com.egarcia.employee.BlockEmployeeApp"
-        android:theme="@style/Theme.BlockEmployeeDirectory"
+        android:name="com.egarcia.employee.EmployeeApp"
+        android:theme="@style/Theme.EmployeeDirectory"
         tools:targetApi="31">
         <activity
             android:name="com.egarcia.employee.directory.presentation.MainActivity"
